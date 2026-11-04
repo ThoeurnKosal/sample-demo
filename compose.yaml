@@ -1,0 +1,142 @@
+# Local development stack: PostgreSQL + HashiCorp Vault + one-shot Vault seeding job.
+#
+#   docker compose up -d
+#
+# Vault runs in DEV mode (in-memory, auto-unsealed, fixed root token). Every Vault
+# restart wipes it and `vault-init` re-seeds it from .env. Dev mode is for laptops only.
+
+name: sample-demo
+
+services:
+  postgres:
+    image: postgres:${POSTGRES_IMAGE_TAG:?.env not found - copy .env.example to .env first}
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${POSTGRES_SUPERUSER}
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}
+      DB_OWNER_USER: ${DB_OWNER_USER}
+      DB_OWNER_PASSWORD: ${DB_OWNER_PASSWORD}
+      DB_APP_USER: ${DB_APP_USER}
+      DB_APP_PASSWORD: ${DB_APP_PASSWORD}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_SUPERUSER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  vault:
+    image: hashicorp/vault:${VAULT_IMAGE_TAG:?.env not found - copy .env.example to .env first}
+    command: ["server", "-dev"]
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_DEV_ROOT_TOKEN}
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      VAULT_ADDR: http://127.0.0.1:8200
+    ports:
+      - "127.0.0.1:8200:8200"
+    healthcheck:
+      test: ["CMD", "vault", "status"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  vault-init:
+    image: hashicorp/vault:${VAULT_IMAGE_TAG:?.env not found - copy .env.example to .env first}
+    depends_on:
+      vault:
+        condition: service_healthy
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: ${VAULT_DEV_ROOT_TOKEN}
+      APP_NAME: ${APP_NAME}
+      DB_OWNER_USER: ${DB_OWNER_USER}
+      DB_OWNER_PASSWORD: ${DB_OWNER_PASSWORD}
+      DB_APP_USER: ${DB_APP_USER}
+      DB_APP_PASSWORD: ${DB_APP_PASSWORD}
+      VAULT_APP_ROLE_ID: ${VAULT_APP_ROLE_ID}
+      VAULT_APP_SECRET_ID: ${VAULT_APP_SECRET_ID}
+      REDIS_APP_USER: ${REDIS_APP_USER}            # new
+      REDIS_APP_PASSWORD: ${REDIS_APP_PASSWORD}    # new
+    volumes:
+      - ./docker/vault/init.sh:/init.sh:ro
+    entrypoint: ["/bin/sh", "/init.sh"]
+    restart: "no"
+
+  lgtm:
+    image: grafana/otel-lgtm:0.30.0       # ពិនិត្យ tag ចុងក្រោយនៅ Docker Hub
+    ports:
+      - "3000:3000"                       # Grafana UI (admin / admin)
+      - "4317:4317"                       # OTLP gRPC
+      - "4318:4318"                       # OTLP HTTP ← app ផ្ញើមកទីនេះ
+
+  # OAuth2 / OIDC server that issues the JWTs the API validates.
+  # DEV mode (in-memory H2): every container re-creation re-imports the "demo" realm
+  # from docker/keycloak/realm-demo.json. Admin console: http://127.0.0.1:8180
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_IMAGE_TAG:?KEYCLOAK_IMAGE_TAG missing in .env - copy the Keycloak block from .env.example}
+    command: [ "start-dev", "--import-realm" ]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USER}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      # Fixed public URL: the "iss" claim is always this value, whatever host name the
+      # token request used. It must match the issuer-uri in application-keycloak.yml.
+      KC_HOSTNAME: http://127.0.0.1:${KEYCLOAK_HOST_PORT:-8180}
+      KC_HEALTH_ENABLED: "true"
+      # Read by the ${...} placeholders in realm-demo.json at import time
+      DEMO_SERVICE_CLIENT_SECRET: ${DEMO_SERVICE_CLIENT_SECRET}
+      DEMO_READONLY_CLIENT_SECRET: ${DEMO_READONLY_CLIENT_SECRET}
+    ports:
+      - "127.0.0.1:${KEYCLOAK_HOST_PORT:-8180}:8080"
+    volumes:
+      - ./docker/keycloak/realm-demo.json:/opt/keycloak/data/import/realm-demo.json:ro
+    healthcheck:
+      # The image has no curl: talk HTTP to the management port (9000) with bash /dev/tcp
+      test: [ "CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep -q UP <&3" ]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 30
+
+  redis:
+    image: redis:${REDIS_IMAGE_TAG:?REDIS_IMAGE_TAG missing in .env - copy the Redis block from .env.example}
+    command:
+      - redis-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --maxmemory
+      - ${REDIS_MAX_MEMORY:-128mb}
+      - --maxmemory-policy
+      - allkeys-lru
+      - --user
+      - default
+      - "off"
+      - --user
+      - ${REDIS_APP_USER}
+      - "on"
+      - ">${REDIS_APP_PASSWORD}"
+      - "~${APP_NAME}:*"
+      - "&*"
+      - "+@read"
+      - "+@write"
+      - "+@connection"
+      - "-@dangerous"
+      - "+info"
+    environment:
+      REDIS_APP_USER: ${REDIS_APP_USER}
+      REDIS_APP_PASSWORD: ${REDIS_APP_PASSWORD}
+    ports:
+      - "127.0.0.1:${REDIS_HOST_PORT:-6379}:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli --no-auth-warning --user \"$$REDIS_APP_USER\" --pass \"$$REDIS_APP_PASSWORD\" ping | grep -q PONG" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata:

@@ -1,0 +1,12 @@
+# Test-only overrides (classpath:/config/ takes precedence over classpath:/).
+# Tests never call Vault; the database comes from Testcontainers via @ServiceConnection.
+spring:
+  cloud:
+    vault:
+      enabled: false
+  flyway:
+    create-schemas: true     # no init script in Testcontainers, so let Flyway create "demo"
+
+management:
+  server:
+    port: 0

@@ -1,0 +1,48 @@
+# Local profile: developer conveniences only. Secrets still come from Vault.
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  structured:
+    format:
+      console: ecs            # JSON on stdout: what Filebeat / Fluent Bit / the platform collects
+    ecs:
+      service:
+        name: demo
+  level:
+    root: INFO
+    com.mysample.demo: DEBUG                                        # our own code
+    com.mysample.demo.shared.observability.HttpLoggingFilter: INFO  # request/response blocks
+    # Turn on only while investigating:
+    # org.springframework.security: DEBUG                 # why a request got 401/403
+    # org.springframework.security.oauth2.server.resource: DEBUG
+    # org.hibernate.SQL: DEBUG                            # SQL statements
+    # org.hibernate.orm.jdbc.bind: TRACE                  # SQL parameter values (contains personal data!)
+  file:
+    name: logs/demo.log        # same lines as the console, also written to a file
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+
+
+app:
+  http-logging:
+    pretty: true
+    include-headers: true
+    include-body: true
+    masked-fields: [password, secret, token, authorization, apiKey, secretId, roleId, pin, otp, cvv, cardNumber, nationalId]
+    hidden-headers: [ postman-token, connection, keep-alive, accept-encoding, x-content-type-options,
+                      x-xss-protection, x-frame-options, pragma, expires, content-length, host ]

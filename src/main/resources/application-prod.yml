@@ -1,0 +1,36 @@
+# Production profile.
+#
+# Vault connection settings are resolved BEFORE profile files are applied, so set them
+# as environment variables on the deployment rather than in this file:
+#   VAULT_ADDR=https://vault.internal:8200
+#   VAULT_ROLE_ID, VAULT_SECRET_ID           (or switch to Kubernetes auth)
+#   SPRING_CLOUD_VAULT_SSL_TRUST_STORE=file:/etc/ssl/vault/truststore.p12
+#   SPRING_CLOUD_VAULT_SSL_TRUST_STORE_PASSWORD=...
+spring:
+  datasource:
+    hikari:
+      data-source-properties:
+        sslmode: verify-full
+        sslrootcert: ${DB_SSL_ROOT_CERT:/etc/ssl/db/root.crt}
+  flyway:
+    enabled: ${DB_MIGRATE_ON_STARTUP:false}   # run migrations as a separate job in prod
+
+management:
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  structured:
+    format:
+      console: ecs            # JSON on stdout: what Filebeat / Fluent Bit / the platform collects
+    ecs:
+      service:
+        name: demo
+
+app:
+  http-logging:
+    enabled: true
+    pretty: false
+    include-headers: false
+    include-body: false

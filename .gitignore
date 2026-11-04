@@ -1,0 +1,11 @@
+.env
+.gradle/
+build/
+out/
+.idea/
+*.iml
+.vscode/
+*.p12
+*.jks
+*.crt
+*.key

@@ -1,0 +1,179 @@
+spring:
+  application:
+    name: demo
+
+  config:
+    # "optional" lets tests switch Vault off with spring.cloud.vault.enabled=false.
+    # With fail-fast below, an enabled but unreachable Vault still stops startup.
+    import: optional:vault://
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Must equal the "iss" claim, i.e. KC_HOSTNAME in compose.yaml + /realms/demo.
+          # Discovery and the JWK Set are fetched lazily on the first request with a token.
+          issuer-uri: http://127.0.0.1:${KEYCLOAK_HOST_PORT:8180}/realms/demo
+          # Reject tokens that were not issued for this API (added by the audience mapper)
+          audiences: demo-api
+
+  cloud:
+    vault:
+      uri: ${VAULT_ADDR:http://localhost:8200}
+      fail-fast: true
+      connection-timeout: 5000
+      read-timeout: 15000
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_APP_ROLE_ID}
+        secret-id: ${VAULT_APP_SECRET_ID}
+        app-role-path: approle
+      kv:
+        enabled: true
+        backend: secret              # KV v2 mount
+        default-context: application # secret/application: shared by every app
+      session:
+        lifecycle:
+          enabled: true              # renew the Vault token before it expires
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:mydb}
+    hikari:
+      pool-name: ${spring.application.name}-hikari
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+      minimum-idle: ${DB_POOL_SIZE:10}
+      connection-timeout: 5000       # fail fast instead of queueing request threads
+      validation-timeout: 3000
+      max-lifetime: 1500000          # 25 min, below typical firewall / LB idle cut-offs
+      keepalive-time: 300000
+      leak-detection-threshold: 60000
+      auto-commit: false
+      data-source-properties:
+        ApplicationName: ${spring.application.name}
+        tcpKeepAlive: true
+        connectTimeout: 5            # seconds
+        socketTimeout: 60            # seconds: hard ceiling on a hung query or network
+        reWriteBatchedInserts: true
+
+  # Cache only (ADR-0005). Username and password come from Vault (secret/demo),
+  # like the database credentials: spring.data.redis.username / spring.data.redis.password.
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      client-name: ${spring.application.name}
+      timeout: 250ms                 # every command has a deadline; a slow Redis becomes a cache miss
+      connect-timeout: 500ms
+
+  cache:
+    type: redis                      # kill switch: SPRING_CACHE_TYPE=none turns caching off, no deploy
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: demo
+        jdbc:
+          time_zone: UTC
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+        default_batch_fetch_size: 50
+        connection:
+          provider_disables_autocommit: true
+        query:
+          in_clause_parameter_padding: true
+          fail_on_pagination_over_collection_fetch: true
+          plan_cache_max_size: 2048
+
+  flyway:
+    enabled: ${DB_MIGRATE_ON_STARTUP:true}
+    default-schema: demo
+    schemas: demo
+    create-schemas: false            # the schema is created by the DBA / init script
+    locations: classpath:db/migration
+    validate-on-migrate: true
+    baseline-on-migrate: false
+    out-of-order: false
+    clean-disabled: true
+    connect-retries: 5
+
+  transaction:
+    default-timeout: 10s             # deadline for every @Transactional method
+
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+  http:
+    clients: # defaults for every outbound HTTP client
+      connect-timeout: 2s
+      read-timeout: 5s
+      redirects: dont-follow
+    serviceclient: # one block per HTTP service group (= downstream system)
+      jsonplaceholder:
+        base-url: ${JSONPLACEHOLDER_BASE_URL:https://jsonplaceholder.typicode.com}
+        read-timeout: 3s
+
+server:
+  shutdown: graceful
+
+management:
+  server:
+    port: ${MANAGEMENT_PORT:8081}
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,db   # Redis is deliberately NOT here: a cache outage must not take pods out
+        liveness:
+          include: livenessState
+
+app:
+  cache:
+    key-prefix: "demo:v1:"           # bump v1 when ExternalUser or CustomerPost changes shape
+    default-ttl: 10m
+    ttl:
+      directory-users: 30m
+      directory-posts: 5m
+
+resilience4j:
+  retry:
+    instances:
+      jsonplaceholder:
+        max-attempts: 3
+        wait-duration: 200ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:              # only transient failures; never 4xx, "not found" or rule violations
+          - com.mysample.demo.shared.error.exception.DownstreamUnavailableException
+  circuitbreaker:
+    instances:
+      jsonplaceholder:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        record-exceptions:             # "user not found" is an answer, not a failure of the API
+          - com.mysample.demo.shared.error.exception.DownstreamUnavailableException
+
+logging:
+  structured:
+    format:
+      console: ecs            # JSON on stdout: what Filebeat / Fluent Bit / the platform collects
+    ecs:
+      service:
+        name: demo
+  level:
+    com.mysample.demo: INFO

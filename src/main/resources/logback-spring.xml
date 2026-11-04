@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Logs:
+    logs/demo.log   every log line of the app (except HTTP traffic)
+    logs/http.log   only HttpLoggingFilter: one block per request/response
+  Both roll over every hour into logs/archive/<name>.yyyy-MM-dd_HH.<n>.log.gz
+-->
+<configuration>
+    <!-- Spring Boot defaults: CONSOLE_LOG_PATTERN / FILE_LOG_PATTERN with traceId, colours -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <property name="LOG_DIR" value="${LOG_PATH:-logs}"/>
+
+    <appender name="APP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/demo.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- %d{yyyy-MM-dd_HH} = one file per hour; %i = extra files if an hour exceeds maxFileSize -->
+            <fileNamePattern>${LOG_DIR}/archive/demo.%d{yyyy-MM-dd_HH}.%i.log.gz</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>72</maxHistory>          <!-- in hours here: keep 3 days -->
+            <totalSizeCap>2GB</totalSizeCap>     <!-- hard limit on disk usage -->
+        </rollingPolicy>
+    </appender>
+
+    <appender name="HTTP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/http.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/archive/http.%d{yyyy-MM-dd_HH}.%i.log.gz</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>72</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- HTTP traffic goes ONLY to http.log (+ console); additivity=false keeps it out of demo.log -->
+    <logger name="com.mysample.demo.shared.observability.HttpLoggingFilter" level="INFO" additivity="false">
+        <appender-ref ref="HTTP_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APP_FILE"/>
+    </root>
+</configuration>

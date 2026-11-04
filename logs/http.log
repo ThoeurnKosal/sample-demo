@@ -1,0 +1,672 @@
+2026-11-04T15:02:26.497+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-1] [87f127580a9c643769aa779989a63885-895b1a514587b750] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   POST http://localhost:8080/api/v1/customers/imports
+│ ── headers
+│     Accept          : */*
+│     Accept-Language : km
+│     Authorization   : Bearer ****
+│     Cache-Control   : no-cache
+│     Content-Type    : application/json
+│     User-Agent      : PostmanRuntime/2.14.0
+│ ── body
+│     {
+│       "externalUserId": 3
+│     }
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (1038 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     {
+│       "id": "0da388d1-7b70-41c9-8c28-f0d6c8792f96",
+│       "externalUserId": 3,
+│       "fullName": "Clementine Bauch",
+│       "email": "n***@yesenia.net",
+│       "phone": "*-***-***-*447",
+│       "city": "McKenziehaven",
+│       "createdAt": "2026-11-04T07:59:03.811Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:02:34.365+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-4] [db65fe3f66301c158d860553773e22be-45e8984b0b26f4bf] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   POST http://localhost:8080/api/v1/customers/1a193aa1-de35-40e1-8e84-4a47b01eb409/accounts
+│ ── headers
+│     Accept          : */*
+│     Accept-Language : km
+│     Authorization   : Bearer ****
+│     Cache-Control   : no-cache
+│     Content-Type    : application/json
+│     User-Agent      : PostmanRuntime/2.14.0
+│ ── body
+│     {
+│       "currency": "USD"
+│     }
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  201 Created  (126 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│     Location      : http://localhost:8080/api/v1/accounts/240c3021-5f29-4e7f-89f7-b1890f531c25
+│ ── body
+│     {
+│       "id": "240c3021-5f29-4e7f-89f7-b1890f531c25",
+│       "customerId": "1a193aa1-de35-40e1-8e84-4a47b01eb409",
+│       "currency": "USD",
+│       "balance": 0.00,
+│       "status": "ACTIVE",
+│       "createdAt": "2026-11-04T08:02:34.300170Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:02:58.205+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-6] [a2555fa2b5173dd305acbd0f3559b78d-d2d9a86137cb0504] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   POST http://localhost:8080/api/v1/customers
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+│ ── body
+│     {
+│       "fullName": "Stane Chu",
+│       "email": "s***@example.com",
+│       "phone": "*** ** *8 70",
+│       "city": "Phnom Penh"
+│     }
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  409 Conflict  (117 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/problem+json
+│ ── body
+│     {
+│       "detail": "A customer with the same email or directory id already exists.",
+│       "instance": "/api/v1/customers",
+│       "status": 409,
+│       "title": "Conflict",
+│       "type": "https://problems.sample-demo.example/duplicate-customer",
+│       "errorCode": "DUPLICATE_CUSTOMER",
+│       "traceId": "a2555fa2b5173dd305acbd0f3559b78d",
+│       "timestamp": "2026-11-04T08:02:58.185Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:03:04.654+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-8] [7fc9b929621095ee1cde96d2b5f8c465-5af1b23ad6b7c238] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers?page=0&size=20
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (77 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     {
+│       "content": [
+│         {
+│           "id": "0da388d1-7b70-41c9-8c28-f0d6c8792f96",
+│           "externalUserId": 3,
+│           "fullName": "Clementine Bauch",
+│           "email": "n***@yesenia.net",
+│           "phone": "*-***-***-*447",
+│           "city": "McKenziehaven",
+│           "createdAt": "2026-11-04T07:59:03.811Z"
+│         },
+│         {
+│           "id": "809bbac4-abd1-45e3-b9ea-e03c5a95bad1",
+│           "externalUserId": 2,
+│           "fullName": "Ervin Howell",
+│           "email": "s***@melissa.tv",
+│           "phone": "***-***-**** x**125",
+│           "city": "Wisokyburgh",
+│           "createdAt": "2026-11-04T06:45:51.061Z"
+│         },
+│         {
+│           "id": "1ec91c43-f54e-4028-8d5c-31b98a1f2260",
+│           "externalUserId": 1,
+│           "fullName": "Leanne Graham",
+│           "email": "s***@april.biz",
+│           "phone": "*-***-***-**** x**442",
+│           "city": "Gwenborough",
+│           "createdAt": "2026-11-04T06:35:35.261Z"
+│         },
+│         {
+│           "id": "01785b55-ef92-41e6-bec9-1d89bcc9999a",
+│           "externalUserId": null,
+│           "fullName": "Stane Chu",
+│           "email": "s***@example.com",
+│           "phone": "*** ** *8 70",
+│           "city": "Phnom Penh",
+│           "createdAt": "2026-11-04T06:17:08.966Z"
+│         },
+│         {
+│           "id": "e42ca5ad-02d3-4eae-84b4-25702b074d15",
+│           "externalUserId": null,
+│           "fullName": "Stane Ly",
+│           "email": "s***@example.com",
+│           "phone": "*** ** *8 90",
+│           "city": "Phnom Penh",
+│           "createdAt": "2026-11-04T04:19:33.048Z"
+│         },
+│         {
+│           "id": "1a193aa1-de35-40e1-8e84-4a47b01eb409",
+│           "externalUserId": null,
+│           "fullName": "Dara Sok",
+│           "email": "m***@example.com",
+│           "phone": "*** *** 678",
+│           "city": "Phnom Penh",
+│           "createdAt": "2026-11-04T03:45:07.851Z"
+│         }
+│       ],
+│       "page": 0,
+│       "size": 20,
+│       "totalElements": 6,
+│       "totalPages": 1
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:12:01.549+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-10] [b73c00d084bb4021261413ad8c1709cc-f5a2da60f280abe2] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/e21806c1-6100-4471-a4ac-ecde24880a85/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  401 Unauthorized  (19 ms)
+│ ── headers
+│     Cache-Control    : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type     : application/problem+json;charset=UTF-8
+│     WWW-Authenticate : Bearer error="invalid_token", error_description="An error occurred while attempting to decode the Jwt: Jwt expired at 2026-11-04T08:03:48Z", error_uri="https://tools.ietf.org/html/rfc6750#section-3.1", resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
+│ ── body
+│     {
+│       "type": "https://problems.sample-demo.example/unauthorized",
+│       "title": "Unauthorized",
+│       "status": 401,
+│       "detail": "The bearer token is invalid or expired.",
+│       "instance": "/api/v1/customers/e21806c1-6100-4471-a4ac-ecde24880a85/posts",
+│       "errorCode": "UNAUTHORIZED",
+│       "traceId": "b73c00d084bb4021261413ad8c1709cc",
+│       "timestamp": "2026-11-04T08:12:01.545970800Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:12:02.415+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-3] [0ac2ad2ea78fb000c69b6ef97c377f71-93bfbdf4bac61f65] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/e21806c1-6100-4471-a4ac-ecde24880a85/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  401 Unauthorized  (3 ms)
+│ ── headers
+│     Cache-Control    : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type     : application/problem+json;charset=UTF-8
+│     WWW-Authenticate : Bearer error="invalid_token", error_description="An error occurred while attempting to decode the Jwt: Jwt expired at 2026-11-04T08:03:48Z", error_uri="https://tools.ietf.org/html/rfc6750#section-3.1", resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
+│ ── body
+│     {
+│       "type": "https://problems.sample-demo.example/unauthorized",
+│       "title": "Unauthorized",
+│       "status": 401,
+│       "detail": "The bearer token is invalid or expired.",
+│       "instance": "/api/v1/customers/e21806c1-6100-4471-a4ac-ecde24880a85/posts",
+│       "errorCode": "UNAUTHORIZED",
+│       "traceId": "0ac2ad2ea78fb000c69b6ef97c377f71",
+│       "timestamp": "2026-11-04T08:12:02.415922Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:12:16.770+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-5] [0641ed7926b039ae2f78e3ac161cd7b2-b3fc48071b8b9402] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/e21806c1-6100-4471-a4ac-ecde24880a85/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  404 Not Found  (15 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/problem+json
+│ ── body
+│     {
+│       "detail": "Customer e21806c1-6100-4471-a4ac-ecde24880a85 was not found.",
+│       "instance": "/api/v1/customers/e21806c1-6100-4471-a4ac-ecde24880a85/posts",
+│       "status": 404,
+│       "title": "Not Found",
+│       "type": "https://problems.sample-demo.example/customer-not-found",
+│       "errorCode": "CUSTOMER_NOT_FOUND",
+│       "traceId": "0641ed7926b039ae2f78e3ac161cd7b2",
+│       "timestamp": "2026-11-04T08:12:16.767Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:12:33.386+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-7] [7c9f93a8b77b4b7dea1dbbd480aabcd1-c26d8dcae11600de] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/1a193aa1-de35-40e1-8e84-4a47b01eb409/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (15 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     []
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:12:35.111+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-9] [7508d03ee954a2bb44d0715f9ef57753-0007710f4fb0fc78] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/1a193aa1-de35-40e1-8e84-4a47b01eb409/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (17 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     []
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:12:40.484+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-2] [e006c43674b3fc3681e1d87515d47a6c-8a44fa95024ca003] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/1/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  400 Bad Request  (19 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/problem+json
+│ ── body
+│     {
+│       "detail": "The request could not be read. Check the body, parameter types and required parameters.",
+│       "instance": "/api/v1/customers/1/posts",
+│       "status": 400,
+│       "title": "Bad Request",
+│       "type": "https://problems.sample-demo.example/malformed-request",
+│       "errorCode": "MALFORMED_REQUEST",
+│       "traceId": "e006c43674b3fc3681e1d87515d47a6c",
+│       "timestamp": "2026-11-04T08:12:40.479Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:12:54.234+07:00  INFO 24644 --- [demo] [http-nio-8080-exec-3] [dc9acd1f33d9b24ada2b3b6c8c61805b-668ff8ee5d8924ae] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/1ec91c43-f54e-4028-8d5c-31b98a1f2260/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (1264 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     [
+│       {
+│         "id": 1,
+│         "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+│         "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+│       },
+│       {
+│         "id": 2,
+│         "title": "qui est esse",
+│         "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+│       },
+│       {
+│         "id": 3,
+│         "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
+│         "body": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
+│       },
+│       {
+│         "id": 4,
+│         "title": "eum et est occaecati",
+│         "body": "ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit"
+│       },
+│       {
+│         "id": 5,
+│         "title": "nesciunt quas odio",
+│         "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque"
+│       },
+│       {
+│         "id": 6,
+│         "title": "dolorem eum magni eos aperiam quia",
+│         "body": "ut aspernatur corporis harum nihil quis provident sequi\nmollitia nobis aliquid molestiae\nperspiciatis et ea nemo ab reprehenderit accusantium quas\nvoluptate dolores velit et doloremque molestiae"
+│       },
+│       {
+│         "id": 7,
+│         "title": "magnam facilis autem",
+│         "body": "dolore placeat quibusdam ea quo vitae\nmagni quis enim qui quis quo nemo aut saepe\nquidem repellat excepturi ut quia\nsunt ut sequi eos ea sed quas"
+│       },
+│       {
+│         "id": 8,
+│         "title": "dolorem dolore est ipsam",
+│         "body": "dignissimos aperiam dolorem qui eum\nfacilis quibusdam animi sint suscipit qui sint possimus cum\nquaerat magni maiores excepturi\nipsam ut commodi dolor voluptatum modi aut vitae"
+│       },
+│       {
+│         "id": 9,
+│         "title": "nesciunt iure omnis dolorem tempora et accusantium",
+│         "body": "consectetur animi nesciunt iure dolore\nenim quia ad\nveniam autem ut quam aut nobis\net est aut quod aut provident voluptas autem voluptas"
+│       },
+│       {
+│         "id": 10,
+│         "title": "optio molestias id quia eum",
+│         "body": "quo et expedita modi cum officia vel magni\ndoloribus qui repudiandae\nvero nisi sit\nquos veniam quod sed accusamus veritatis error"
+│       }
+│     ]
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:21:49.049+07:00  INFO 16144 --- [demo] [http-nio-8080-exec-2] [d583b738b1f7c19664c5154a2dbaea28-b1a30aa78a6563f8] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/1ec91c43-f54e-4028-8d5c-31b98a1f2260/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (1637 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     [
+│       {
+│         "id": 1,
+│         "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+│         "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+│       },
+│       {
+│         "id": 2,
+│         "title": "qui est esse",
+│         "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+│       },
+│       {
+│         "id": 3,
+│         "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
+│         "body": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
+│       },
+│       {
+│         "id": 4,
+│         "title": "eum et est occaecati",
+│         "body": "ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit"
+│       },
+│       {
+│         "id": 5,
+│         "title": "nesciunt quas odio",
+│         "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque"
+│       },
+│       {
+│         "id": 6,
+│         "title": "dolorem eum magni eos aperiam quia",
+│         "body": "ut aspernatur corporis harum nihil quis provident sequi\nmollitia nobis aliquid molestiae\nperspiciatis et ea nemo ab reprehenderit accusantium quas\nvoluptate dolores velit et doloremque molestiae"
+│       },
+│       {
+│         "id": 7,
+│         "title": "magnam facilis autem",
+│         "body": "dolore placeat quibusdam ea quo vitae\nmagni quis enim qui quis quo nemo aut saepe\nquidem repellat excepturi ut quia\nsunt ut sequi eos ea sed quas"
+│       },
+│       {
+│         "id": 8,
+│         "title": "dolorem dolore est ipsam",
+│         "body": "dignissimos aperiam dolorem qui eum\nfacilis quibusdam animi sint suscipit qui sint possimus cum\nquaerat magni maiores excepturi\nipsam ut commodi dolor voluptatum modi aut vitae"
+│       },
+│       {
+│         "id": 9,
+│         "title": "nesciunt iure omnis dolorem tempora et accusantium",
+│         "body": "consectetur animi nesciunt iure dolore\nenim quia ad\nveniam autem ut quam aut nobis\net est aut quod aut provident voluptas autem voluptas"
+│       },
+│       {
+│         "id": 10,
+│         "title": "optio molestias id quia eum",
+│         "body": "quo et expedita modi cum officia vel magni\ndoloribus qui repudiandae\nvero nisi sit\nquos veniam quod sed accusamus veritatis error"
+│       }
+│     ]
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:22:44.967+07:00  INFO 16144 --- [demo] [http-nio-8080-exec-4] [d2908a887a4e2391cf2cd67784188e9a-19d6895a49c0c2f7] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/1ec91c43-f54e-4028-8d5c-31b98a1f2260/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (22 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     [
+│       {
+│         "id": 1,
+│         "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+│         "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+│       },
+│       {
+│         "id": 2,
+│         "title": "qui est esse",
+│         "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+│       },
+│       {
+│         "id": 3,
+│         "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
+│         "body": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
+│       },
+│       {
+│         "id": 4,
+│         "title": "eum et est occaecati",
+│         "body": "ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit"
+│       },
+│       {
+│         "id": 5,
+│         "title": "nesciunt quas odio",
+│         "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque"
+│       },
+│       {
+│         "id": 6,
+│         "title": "dolorem eum magni eos aperiam quia",
+│         "body": "ut aspernatur corporis harum nihil quis provident sequi\nmollitia nobis aliquid molestiae\nperspiciatis et ea nemo ab reprehenderit accusantium quas\nvoluptate dolores velit et doloremque molestiae"
+│       },
+│       {
+│         "id": 7,
+│         "title": "magnam facilis autem",
+│         "body": "dolore placeat quibusdam ea quo vitae\nmagni quis enim qui quis quo nemo aut saepe\nquidem repellat excepturi ut quia\nsunt ut sequi eos ea sed quas"
+│       },
+│       {
+│         "id": 8,
+│         "title": "dolorem dolore est ipsam",
+│         "body": "dignissimos aperiam dolorem qui eum\nfacilis quibusdam animi sint suscipit qui sint possimus cum\nquaerat magni maiores excepturi\nipsam ut commodi dolor voluptatum modi aut vitae"
+│       },
+│       {
+│         "id": 9,
+│         "title": "nesciunt iure omnis dolorem tempora et accusantium",
+│         "body": "consectetur animi nesciunt iure dolore\nenim quia ad\nveniam autem ut quam aut nobis\net est aut quod aut provident voluptas autem voluptas"
+│       },
+│       {
+│         "id": 10,
+│         "title": "optio molestias id quia eum",
+│         "body": "quo et expedita modi cum officia vel magni\ndoloribus qui repudiandae\nvero nisi sit\nquos veniam quod sed accusamus veritatis error"
+│       }
+│     ]
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:57:03.040+07:00  INFO 20596 --- [demo] [http-nio-8080-exec-1] [d8fe14a61d8ee8e83217b69793c82305-30dc490ef525ebb2] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   POST http://localhost:8080/api/v1/customers
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+│ ── body
+│     {
+│       "fullName": "Stane Chu",
+│       "email": "s***@example.com",
+│       "phone": "*** ** *8 70",
+│       "city": "Phnom Penh"
+│     }
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  201 Created  (1333 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│     Location      : http://localhost:8080/api/v1/customers/012303a7-73b2-4f97-b9ac-334bdadc4c84
+│ ── body
+│     {
+│       "id": "012303a7-73b2-4f97-b9ac-334bdadc4c84",
+│       "externalUserId": null,
+│       "fullName": "Stane Chu",
+│       "email": "s***@example.com",
+│       "phone": "*** ** *8 70",
+│       "city": "Phnom Penh",
+│       "createdAt": "2026-11-04T08:57:02.873Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:57:13.485+07:00  INFO 20596 --- [demo] [http-nio-8080-exec-4] [272f3b5009e2a705b1654082f8477d8e-b9455258649f0160] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   POST http://localhost:8080/api/v1/customers/imports
+│ ── headers
+│     Accept          : */*
+│     Accept-Language : km
+│     Authorization   : Bearer ****
+│     Cache-Control   : no-cache
+│     Content-Type    : application/json
+│     User-Agent      : PostmanRuntime/2.14.0
+│ ── body
+│     {
+│       "externalUserId": 3
+│     }
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  201 Created  (1228 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│     Location      : http://localhost:8080/api/v1/customers/7c3db9f0-862c-4cb9-a90f-70ab8a791157
+│ ── body
+│     {
+│       "id": "7c3db9f0-862c-4cb9-a90f-70ab8a791157",
+│       "externalUserId": 3,
+│       "fullName": "Clementine Bauch",
+│       "email": "n***@yesenia.net",
+│       "phone": "*-***-***-*447",
+│       "city": "McKenziehaven",
+│       "createdAt": "2026-11-04T08:57:13.474Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:57:25.997+07:00  INFO 20596 --- [demo] [http-nio-8080-exec-6] [9c17e10946c371ebc266decf8965e345-2d3d46086d26606f] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/7c3db9f0-862c-4cb9-a90f-70ab8a791157
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (31 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     {
+│       "id": "7c3db9f0-862c-4cb9-a90f-70ab8a791157",
+│       "externalUserId": 3,
+│       "fullName": "Clementine Bauch",
+│       "email": "n***@yesenia.net",
+│       "phone": "*-***-***-*447",
+│       "city": "McKenziehaven",
+│       "createdAt": "2026-11-04T08:57:13.474Z"
+│     }
+└──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-04T15:57:37.135+07:00  INFO 20596 --- [demo] [http-nio-8080-exec-8] [29e30e98a57b8038f614a910c0fbaf9c-e2a4e48ce8894021] c.m.d.s.observability.HttpLoggingFilter  : 
+┌──────────────────────────────────────────────────────────────────────────────────────────
+│ REQUEST   GET http://localhost:8080/api/v1/customers/7c3db9f0-862c-4cb9-a90f-70ab8a791157/posts
+│ ── headers
+│     Accept        : */*
+│     Authorization : Bearer ****
+│     Cache-Control : no-cache
+│     Content-Type  : application/json
+│     User-Agent    : PostmanRuntime/2.14.0
+├──────────────────────────────────────────────────────────────────────────────────────────
+│ RESPONSE  200 OK  (128 ms)
+│ ── headers
+│     Cache-Control : no-cache, no-store, max-age=0, must-revalidate
+│     Content-Type  : application/json
+│ ── body
+│     [
+│       {
+│         "id": 21,
+│         "title": "asperiores ea ipsam voluptatibus modi minima quia sint",
+│         "body": "repellat aliquid praesentium dolorem quo\nsed totam minus non itaque\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\ntempora et tenetur expedita sunt"
+│       },
+│       {
+│         "id": 22,
+│         "title": "dolor sint quo a velit explicabo quia nam",
+│         "body": "eos qui et ipsum ipsam suscipit aut\nsed omnis non odio\nexpedita earum mollitia molestiae aut atque rem suscipit\nnam impedit esse"
+│       },
+│       {
+│         "id": 23,
+│         "title": "maxime id vitae nihil numquam",
+│         "body": "veritatis unde neque eligendi\nquae quod architecto quo neque vitae\nest illo sit tempora doloremque fugit quod\net et vel beatae sequi ullam sed tenetur perspiciatis"
+│       },
+│       {
+│         "id": 24,
+│         "title": "autem hic labore sunt dolores incidunt",
+│         "body": "enim et ex nulla\nomnis voluptas quia qui\nvoluptatem consequatur numquam aliquam sunt\ntotam recusandae id dignissimos aut sed asperiores deserunt"
+│       },
+│       {
+│         "id": 25,
+│         "title": "rem alias distinctio quo quis",
+│         "body": "ullam consequatur ut\nomnis quis sit vel consequuntur\nipsa eligendi ipsum molestiae et omnis error nostrum\nmolestiae illo tempore quia et distinctio"
+│       },
+│       {
+│         "id": 26,
+│         "title": "est et quae odit qui non",
+│         "body": "similique esse doloribus nihil accusamus\nomnis dolorem fuga consequuntur reprehenderit fugit recusandae temporibus\nperspiciatis cum ut laudantium\nomnis aut molestiae vel vero"
+│       },
+│       {
+│         "id": 27,
+│         "title": "quasi id et eos tenetur aut quo autem",
+│         "body": "eum sed dolores ipsam sint possimus debitis occaecati\ndebitis qui qui et\nut placeat enim earum aut odit facilis\nconsequatur suscipit necessitatibus rerum sed inventore temporibus consequatur"
+│       },
+│       {
+│         "id": 28,
+│         "title": "delectus ullam et corporis nulla voluptas sequi",
+│         "body": "non et quaerat ex quae ad maiores\nmaiores recusandae totam aut blanditiis mollitia quas illo\nut voluptatibus voluptatem\nsimilique nostrum eum"
+│       },
+│       {
+│         "id": 29,
+│         "title": "iusto eius quod necessitatibus culpa ea",
+│         "body": "odit magnam ut saepe sed non qui\ntempora atque nihil\naccusamus illum doloribus illo dolor\neligendi repudiandae odit magni similique sed cum maiores"
+│       },
+│       {
+│         "id": 30,
+│         "title": "a quo magni similique perferendis",
+│         "body": "alias dolor cumque\nimpedit blanditiis non eveniet odio maxime\nblanditiis amet eius quis tempora quia autem rem\na provident perspiciatis quia"
+│       }
+│     ]
+└──────────────────────────────────────────────────────────────────────────────────────────
