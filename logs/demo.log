@@ -1,1 +1,3 @@
-2026-11-04T16:19:55.367+07:00  WARN 20596 --- [demo] [demo-hikari:housekeeper] [                                                 ] com.zaxxer.hikari.pool.HikariPool        : demo-hikari - Thread starvation or clock leap detected (housekeeper delta=5m8s722ms801µs100ns).
+2026-11-04T17:00:41.985+07:00  INFO 20596 --- [demo] [Spring-Cloud-Vault-1] [                                                 ] o.s.v.a.LifecycleAwareSessionManager     : Renewing token
+2026-11-04T17:00:42.014+07:00  WARN 20596 --- [demo] [Spring-Cloud-Vault-1] [                                                 ] o.s.v.a.LifecycleAwareSessionManager     : Cannot renew token: Status 400 Bad Request lease expired
+2026-11-04T17:00:42.027+07:00  INFO 20596 --- [demo] [Spring-Cloud-Vault-2] [                                                 ] o.s.v.a.LifecycleAwareSessionManager     : Scheduling Token renewal
